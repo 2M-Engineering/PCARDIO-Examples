@@ -12,7 +12,7 @@ It describes the device communication protocols, the packet-based **Core and Ser
 The guide also details how to configure sensors, gains, sample rates and data types, how to schedule and control a measurement, and how to parse the data packets streamed over wireless BLE or logged to the recorder's onboard memory, including the digital-to-analog conversion for every data type.
 This document serves as the primary developer reference for accessing, configuring, streaming and downloading data from PCARDIO recorders.
 
-The full reference is also published as HTML in [docs/index.html](docs/index.html), covering the BLE service and characteristic UUIDs, the Core Interface packet types, the complete memory map, the sampling configuration register, the data packet layout, and the configuration, data and log file formats.
+The full reference is also published as HTML at [pcardiowearables.com/support/documentation/interface](https://pcardiowearables.com/support/documentation/interface/), covering the BLE service and characteristic UUIDs, the Core Interface packet types, the complete memory map, the sampling configuration register, the data packet layout, and the configuration, data and log file formats. The same page is mirrored in [docs/index.html](docs/index.html).
 
 Firmware version supported: **v1.1.2 or higher**.
 
@@ -62,6 +62,7 @@ Sensor IDs 13 to 21 in the interface document (PPG, temperature, ICG, heart rate
 - [Derived cardiac parameters](https://pcardiowearables.com/derived-cardiac-parameters/)
 - [Wearable medical device development platform](https://pcardiowearables.com/wearable-medical-device-development-platform/)
 - [Quick start](https://pcardiowearables.com/support/quick-start/)
+- [Interface reference (HTML)](https://pcardiowearables.com/support/documentation/interface/)
 - [Support and documentation](https://pcardiowearables.com/support/documentation/)
 - [Downloads](https://pcardiowearables.com/support/downloads/)
 

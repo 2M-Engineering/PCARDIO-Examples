@@ -90,7 +90,7 @@ A few places in v8 of the interface document are ambiguous or state two differen
 
 ## Links
 
-- [PCARDIO Interface document, HTML](../docs/index.html)
+- [PCARDIO Interface document, HTML](https://pcardiowearables.com/support/documentation/interface/)
 - [Developers API](https://pcardiowearables.com/support/developers-api/)
 - [Integration guide](https://pcardiowearables.com/support/integration-guide/)
 - [Real-time biosignal streaming](https://pcardiowearables.com/real-time-biosignal-streaming/)
