@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Recorder output copied from the device for local testing
+data_*.txt
+log.txt
+*.csv
+
+# OS
+.DS_Store
+Thumbs.db

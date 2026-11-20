@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PCARDIO API Reference: BLE &amp; Serial Interface | PCARDIO Wearables</title>
+<meta name="description" content="Complete developer reference for the PCARDIO wearable biosignal recorder API: BLE Nordic UART Service UUIDs, Core and Serial Interface packets, memory map, sampling configuration, ECG, EMG, bioimpedance and IMU data packet formats.">
+<link rel="canonical" href="https://2m-engineering.github.io/PCARDIO-Examples/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="author" content="2M Engineering">
+<meta name="theme-color" content="#0d1117">
+<meta name="format-detection" content="telephone=no">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="PCARDIO Wearables">
+<meta property="og:title" content="PCARDIO API Reference: BLE and Serial Interface">
+<meta property="og:description" content="Complete developer reference for the PCARDIO wearable biosignal recorder API: BLE Nordic UART Service UUIDs, Core and Serial Interface packets, memory map, sampling configuration, ECG, EMG, bioimpedance and IMU data packet formats.">
+<meta property="og:url" content="https://2m-engineering.github.io/PCARDIO-Examples/">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PCARDIO API Reference: BLE and Serial Interface">
+<meta name="twitter:description" content="Complete developer reference for the PCARDIO wearable biosignal recorder API: BLE Nordic UART Service UUIDs, Core and Serial Interface packets, memory map, sampling configuration, ECG, EMG, bioimpedance and IMU data packet formats.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://2m-engineering.github.io/PCARDIO-Examples/#article",
+      "headline": "PCARDIO API Reference: BLE and Serial Interface for Wearable Biosignal Recorders",
+      "description": "Complete developer reference for the PCARDIO wearable biosignal recorder API: BLE Nordic UART Service UUIDs, Core and Serial Interface packets, memory map, sampling configuration, ECG, EMG, bioimpedance and IMU data packet formats.",
+      "inLanguage": "en",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-11-20",
+      "version": "8",
+      "url": "https://2m-engineering.github.io/PCARDIO-Examples/",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": "https://2m-engineering.github.io/PCARDIO-Examples/" },
+      "author": { "@type": "Organization", "@id": "https://pcardiowearables.com/#organization" },
+      "publisher": { "@type": "Organization", "@id": "https://pcardiowearables.com/#organization" },
+      "about": [
+        { "@type": "Thing", "name": "Electrocardiography" },
+        { "@type": "Thing", "name": "Electromyography" },
+        { "@type": "Thing", "name": "Bioimpedance" },
+        { "@type": "Thing", "name": "Wireless BLE" },
+        { "@type": "Thing", "name": "Wearable technology" }
+      ],
+      "keywords": "PCARDIO API, wearable ECG API, BLE biosignal streaming, Nordic UART Service, EMG recorder API, bioimpedance respiration, IMU data packet, biosignal data format",
+      "proficiencyLevel": "Expert",
+      "dependencies": "PCARDIO recorder firmware v1.1.2 or higher",
+      "isPartOf": { "@type": "WebSite", "@id": "https://pcardiowearables.com/#website" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://pcardiowearables.com/#organization",
+      "name": "2M Engineering",
+      "url": "https://www.2mel.nl",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "John F Kennedylaan 3",
+        "postalCode": "5555 XC",
+        "addressLocality": "Valkenswaard",
+        "addressCountry": "NL"
+      },
+      "brand": { "@type": "Brand", "name": "PCARDIO" }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://pcardiowearables.com/#website",
+      "url": "https://pcardiowearables.com/",
+      "name": "PCARDIO Wearables",
+      "publisher": { "@id": "https://pcardiowearables.com/#organization" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "PCARDIO Wearables", "item": "https://pcardiowearables.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Support", "item": "https://pcardiowearables.com/support/" },
+        { "@type": "ListItem", "position": 3, "name": "Documentation", "item": "https://pcardiowearables.com/support/documentation/" },
+        { "@type": "ListItem", "position": 4, "name": "API reference", "item": "https://2m-engineering.github.io/PCARDIO-Examples/" }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+:root{
+  --bg:#0d1117; --bg-2:#131a24; --bg-3:#18202b;
+  --line:#243041; --line-2:#2f3d52;
+  --fg:#d7dee8; --fg-dim:#97a3b4; --fg-bright:#f2f6fb;
+  --accent:#36c3f2; --accent-2:#7ee0b8; --warn:#f0b354;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:1.5rem}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font:16px/1.65 var(--sans);-webkit-text-size-adjust:100%;
+}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:1rem;top:1rem;z-index:99;background:var(--accent);color:#04121a;padding:.6rem 1rem;border-radius:4px}
+a{color:var(--accent);text-decoration:none}
+a:hover,a:focus{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 1.25rem}
+
+header.site{border-bottom:1px solid var(--line);background:linear-gradient(180deg,#101825,#0d1117)}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:1rem;padding-bottom:1rem;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:.14em;font-size:1rem;color:var(--fg-bright);text-transform:uppercase}
+.brand span{color:var(--accent)}
+header.site nav a{color:var(--fg-dim);font-size:.85rem;margin-left:1.1rem}
+header.site nav a:hover{color:var(--accent)}
+
+.crumbs{font-size:.8rem;color:var(--fg-dim);padding:.9rem 0 0}
+.crumbs a{color:var(--fg-dim)} .crumbs a:hover{color:var(--accent)}
+.crumbs span{margin:0 .4rem;opacity:.5}
+
+.hero{padding:2.2rem 0 1.8rem;border-bottom:1px solid var(--line)}
+h1{font-size:clamp(1.6rem,3.6vw,2.4rem);line-height:1.2;margin:.2rem 0 .8rem;color:var(--fg-bright);letter-spacing:-.01em}
+.lede{font-size:1.06rem;color:var(--fg-dim);max-width:72ch;margin:0 0 1.2rem}
+.meta{display:flex;flex-wrap:wrap;gap:.5rem}
+.pill{font:600 .72rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  background:var(--bg-3);border:1px solid var(--line-2);color:var(--fg-dim);
+  padding:.45rem .7rem;border-radius:999px}
+.pill.on{color:var(--accent-2);border-color:#2b5c4a}
+
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:2.5rem;padding:2rem 0 4rem;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr;gap:1.5rem}}
+
+nav.toc{position:sticky;top:1.25rem;max-height:calc(100vh - 2.5rem);overflow-y:auto;
+  border:1px solid var(--line);border-radius:8px;background:var(--bg-2);padding:1rem .9rem}
+@media(max-width:900px){nav.toc{position:static;max-height:none}}
+nav.toc h2{font:700 .72rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--fg-dim);margin:0 0 .7rem;border:0;padding:0}
+nav.toc ol{list-style:none;margin:0;padding:0}
+nav.toc > ol > li{margin:.1rem 0}
+nav.toc .n{color:var(--fg-dim);font-family:var(--mono);font-size:.82em;margin-right:.35em}
+nav.toc a:hover .n{color:var(--accent)}
+nav.toc a{display:block;padding:.3rem .4rem;border-radius:4px;color:var(--fg);font-size:.86rem;line-height:1.35}
+nav.toc a:hover{background:var(--bg-3);text-decoration:none;color:var(--accent)}
+nav.toc ol ol{margin:.1rem 0 .3rem .75rem;border-left:1px solid var(--line);padding-left:.5rem}
+nav.toc ol ol a{color:var(--fg-dim);font-size:.8rem;padding:.2rem .4rem}
+
+main{min-width:0}
+section{margin:0 0 2.6rem;scroll-margin-top:1.5rem}
+h2{font-size:1.5rem;color:var(--fg-bright);margin:2.4rem 0 .9rem;padding-bottom:.5rem;
+  border-bottom:1px solid var(--line);letter-spacing:-.01em;scroll-margin-top:1.5rem}
+section:first-of-type h2{margin-top:0}
+h3{font-size:1.12rem;color:var(--fg-bright);margin:1.9rem 0 .6rem;scroll-margin-top:1.5rem}
+h4{font-size:.98rem;color:var(--fg-bright);margin:1.4rem 0 .45rem;scroll-margin-top:1.5rem}
+.num{font-family:var(--mono);color:var(--fg-dim);font-weight:400;font-size:.82em;margin-right:.5em}
+p{margin:0 0 1rem;max-width:80ch}
+ul,ol{margin:0 0 1rem;padding-left:1.3rem;max-width:80ch}
+li{margin:.3rem 0}
+strong{color:var(--fg-bright)}
+
+code{font-family:var(--mono);font-size:.88em;background:var(--bg-3);
+  border:1px solid var(--line);border-radius:4px;padding:.1em .38em;color:var(--accent-2);
+  overflow-wrap:break-word}
+pre{background:var(--bg-2);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:6px;padding:1rem;overflow-x:auto;margin:0 0 1.2rem}
+pre code{background:none;border:0;padding:0;color:var(--fg);font-size:.85rem;line-height:1.6}
+
+.tw{overflow-x:auto;margin:0 0 1.4rem;border:1px solid var(--line);border-radius:8px;background:var(--bg-2)}
+table{border-collapse:collapse;width:100%;font-size:.87rem;min-width:min(100%,520px)}
+caption{caption-side:top;text-align:left;padding:.75rem 1rem;font-size:.78rem;color:var(--fg-dim);
+  border-bottom:1px solid var(--line);font-family:var(--mono);letter-spacing:.03em}
+th,td{padding:.55rem .8rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{background:var(--bg-3);color:var(--fg-bright);font-size:.76rem;text-transform:uppercase;
+  letter-spacing:.07em;white-space:nowrap;position:sticky;top:0}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#16202c}
+td.m,th.m{font-family:var(--mono);white-space:nowrap}
+td.c,th.c{text-align:center}
+
+.note,.warn{border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--bg-2);
+  border-radius:6px;padding:.9rem 1.1rem;margin:0 0 1.2rem}
+.warn{border-left-color:var(--warn)}
+.note p:last-child,.warn p:last-child{margin-bottom:0}
+.note b,.warn b{display:block;font-size:.72rem;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.35rem;font-family:var(--mono)}
+.warn b{color:var(--warn)}
+
+figure{margin:0 0 1.5rem}
+figure svg{width:100%;height:auto;display:block;background:var(--bg-2);
+  border:1px solid var(--line);border-radius:8px;padding:1rem}
+figcaption{font-size:.78rem;color:var(--fg-dim);margin-top:.5rem;font-family:var(--mono)}
+.flow text{font:13px var(--sans);fill:#d7dee8}
+.flow .lbl{font-size:11px;fill:#97a3b4}
+.flow rect,.flow path.node,.flow ellipse{fill:#18202b;stroke:#36c3f2;stroke-width:1.5}
+.flow path.arrow,.flow line{stroke:#5b6b80;stroke-width:1.5;fill:none}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:0 0 1.4rem}
+.card{border:1px solid var(--line);border-radius:8px;padding:1rem 1.1rem;background:var(--bg-2)}
+.card h3{margin:0 0 .4rem;font-size:.98rem}
+.card p{margin:0;font-size:.88rem;color:var(--fg-dim)}
+
+footer.site{border-top:1px solid var(--line);background:var(--bg-2);padding:2.2rem 0;
+  font-size:.86rem;color:var(--fg-dim)}
+footer.site .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:1.5rem}
+footer.site h2{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-bright);
+  border:0;margin:0 0 .6rem;padding:0}
+footer.site ul{list-style:none;padding:0;margin:0}
+footer.site li{margin:.3rem 0}
+footer.site .fine{border-top:1px solid var(--line);padding-top:1.2rem;font-size:.8rem;max-width:90ch}
+@media print{nav.toc,header.site nav{display:none} body{background:#fff;color:#000} .layout{display:block}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <div class="wrap">
+    <div class="brand">PCARDIO<span>.</span> API Reference</div>
+    <nav aria-label="Primary">
+      <a href="https://pcardiowearables.com/">Platform</a>
+      <a href="https://pcardiowearables.com/products-ecg-recorders/">Recorders</a>
+      <a href="https://pcardiowearables.com/support/developers-api/">Developers</a>
+      <a href="https://pcardiowearables.com/support/documentation/">Documentation</a>
+      <a href="https://github.com/2M-Engineering/PCARDIO-Examples">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="https://pcardiowearables.com/">PCARDIO Wearables</a><span>/</span><a href="https://pcardiowearables.com/support/">Support</a><span>/</span><a href="https://pcardiowearables.com/support/documentation/">Documentation</a><span>/</span>API reference
+  </nav>
+</div>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>PCARDIO API: BLE and serial interface reference</h1>
+    <p class="lede">The complete developer reference for integrating PCARDIO wearable biosignal recorders.
+    It covers the wireless BLE and USB serial communication protocols, the packet-based Core and Serial
+    interfaces, the device memory map, the sampling configuration register, and the byte-level layout of the
+    ECG, EMG, bioimpedance and motion data the recorder streams and logs.</p>
+    <div class="meta">
+      <span class="pill">Document version 8</span>
+      <span class="pill">2026-10-23</span>
+      <span class="pill on">Firmware v1.1.2+</span>
+      <span class="pill">2M Engineering</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+<div class="layout">
+<nav class="toc" aria-label="Table of contents">
+<h2>On this page</h2>
+<ol>
+<li><a href="#introduction"><span class="n">1</span> Introduction</a>
+</li>
+<li><a href="#communication-protocols"><span class="n">2</span> Communication protocols</a>
+<ol>
+<li><a href="#ble-communication"><span class="n">2.1</span> BLE communication</a></li>
+<li><a href="#serial-communication"><span class="n">2.2</span> Serial communication</a></li>
+</ol>
+</li>
+<li><a href="#core-interface"><span class="n">3</span> Core interface</a>
+<ol>
+<li><a href="#read-packet"><span class="n">3.1</span> Read packet</a></li>
+<li><a href="#data-packet-write"><span class="n">3.2</span> Data packet</a></li>
+<li><a href="#abort-packet"><span class="n">3.3</span> Abort packet</a></li>
+<li><a href="#stream-packet"><span class="n">3.4</span> Stream packet</a></li>
+</ol>
+</li>
+<li><a href="#serial-interface"><span class="n">4</span> Serial interface</a>
+<ol>
+<li><a href="#transmit"><span class="n">4.1</span> Transmit</a></li>
+<li><a href="#receive"><span class="n">4.2</span> Receive</a></li>
+<li><a href="#upgrade"><span class="n">4.3</span> Upgrade</a></li>
+<li><a href="#reboot"><span class="n">4.4</span> Reboot</a></li>
+</ol>
+</li>
+<li><a href="#memory-map"><span class="n">5</span> Memory map</a>
+<ol>
+<li><a href="#info-memory"><span class="n">5.1</span> Info memory</a></li>
+<li><a href="#device-configuration-memory"><span class="n">5.2</span> Device configuration memory</a></li>
+<li><a href="#measuring-configuration-memory"><span class="n">5.3</span> Measuring configuration memory</a></li>
+<li><a href="#stream-memory"><span class="n">5.4</span> Stream memory</a></li>
+</ol>
+</li>
+<li><a href="#data-packet"><span class="n">6</span> Data packet</a>
+<ol>
+<li><a href="#packet-header"><span class="n">6.1</span> Header</a></li>
+<li><a href="#packet-payload"><span class="n">6.2</span> Payload</a></li>
+</ol>
+</li>
+<li><a href="#sampling-configuration"><span class="n">7</span> Sampling configuration</a>
+<ol>
+<li><a href="#sensor-configuration"><span class="n">7.1</span> Sensor configuration</a></li>
+</ol>
+</li>
+<li><a href="#file-interface"><span class="n">8</span> File interface</a>
+<ol>
+<li><a href="#configuration-file"><span class="n">8.1</span> Configuration file</a></li>
+<li><a href="#data-files"><span class="n">8.2</span> Data files</a></li>
+<li><a href="#log-file"><span class="n">8.3</span> Log file</a></li>
+</ol>
+</li>
+<li><a href="#input-error-handling"><span class="n">9</span> Input error handling</a>
+</li>
+<li><a href="#good-practices"><span class="n">10</span> Good practices</a>
+<ol>
+<li><a href="#multiple-fields"><span class="n">10.1</span> Reading and writing multiple fields</a></li>
+<li><a href="#single-operations"><span class="n">10.2</span> Single operations</a></li>
+<li><a href="#battery-monitoring"><span class="n">10.3</span> Battery and data size monitoring</a></li>
+<li><a href="#quick-start"><span class="n">10.4</span> Quick start</a></li>
+</ol>
+</li>
+<li><a href="#experimental-sensors"><span class="n">11</span> Experimental sensors</a>
+</li>
+</ol>
+</nav>
+<main id="main">
+
+<section id="introduction">
+<h2><span class="num">1</span>Introduction</h2>
+
+<p>The PCARDIO API gives developers access to the full capability of the PCARDIO recorder. It lets you
+integrate sensor data such as ECG, bioimpedance, EMG and IMU motion into your own applications, configure
+sensor settings, and manage recorded data. The platform is used in medical research, sports science,
+occupational health and defence applications.</p>
+
+<p>Whether you are building a mobile app, an IoT solution or any other software that needs connectivity
+and data exchange with the recorder, this reference provides the information required to reach every
+function of the PCARDIO recorder.</p>
+
+<p>A PCARDIO recorder can be reached over two communication protocols: <strong>wireless BLE</strong>, and
+<strong>serial communication</strong> through a micro-USB connector. The wireless BLE link provides access
+to the <a href="#core-interface">Core Interface</a>, which covers device configuration and data access.
+The serial link provides access to the <a href="#serial-interface">Serial Interface</a>, which extends the
+Core Interface. In addition, the recorder exposes a <strong>USB mass storage</strong> interface that allows
+you to configure the recorder and download data as files.</p>
+
+<p>This document explains how to:</p>
+<ul>
+<li>Discover and communicate with a PCARDIO recorder over wireless BLE and serial communication</li>
+<li>Understand the structure of the files in the recorder's mass storage</li>
+<li>Configure device and measurement settings</li>
+<li>Interact with the recorder's internal memory map</li>
+<li>Parse the data streamed or logged by the PCARDIO recorder</li>
+</ul>
+
+<div class="note"><b>Firmware</b><p>This reference applies to recorder firmware <strong>v1.1.2 or higher</strong>.</p></div>
+
+<div class="cards">
+  <div class="card"><h3>Wireless BLE</h3><p>Nordic UART Service, Core Interface packets, live streaming of raw or derived signals.</p></div>
+  <div class="card"><h3>USB serial</h3><p>ASCII-framed Core Interface, plus firmware upgrade and reboot commands.</p></div>
+  <div class="card"><h3>USB mass storage</h3><p>Configure through <code>config.txt</code> and download recordings as files, with no protocol code.</p></div>
+</div>
+
+<p>Working code for everything described here is available in the
+<a href="https://github.com/2M-Engineering/PCARDIO-Examples">PCARDIO-Examples repository</a>, and the recorder models themselves are listed on the
+<a href="https://pcardiowearables.com/products-ecg-recorders/">ECG recorders page</a>.</p>
+</section>
+
+<section id="communication-protocols">
+<h2><span class="num">2</span>Communication protocols</h2>
+
+<p>To exchange data with a PCARDIO recorder you first establish a connection over one of the available
+communication protocols. The interfaces can only be used once that connection exists. Each protocol has its
+own characteristics, described below.</p>
+
+<h3 id="ble-communication"><span class="num">2.1</span>BLE communication</h3>
+
+<p>The PCARDIO recorder communicates over wireless BLE using the <strong>Nordic UART Service (NUS)</strong>,
+a custom BLE service that emulates a serial port.</p>
+
+<p>The recorder exposes a single GATT service. In BLE, the GATT protocol organises data into services, each
+service groups related characteristics, and characteristics are the readable, writable or notifiable values
+that form the interface for data exchange. The PCARDIO service is identified by the 128-bit UUID
+<code>6E400001-B5A3-F393-E0A9-E50E24DCCA9E</code>, which is required to discover and connect to the
+recorder's custom NUS implementation.</p>
+
+<p>Within this service, PCARDIO defines two characteristics. Notifications must be explicitly enabled on
+the TX characteristic before the recorder can send messages.</p>
+
+<div class="tw"><table>
+<caption>Table 1. BLE characteristics</caption>
+<thead><tr><th>Characteristic</th><th>UUID</th><th>Properties</th></tr></thead>
+<tbody>
+<tr><td>RX characteristic</td><td class="m">6E400002-B5A3-F393-E0A9-E50E24DCCA9E</td><td>Write, write without response</td></tr>
+<tr><td>TX characteristic</td><td class="m">6E400003-B5A3-F393-E0A9-E50E24DCCA9E</td><td>Notify</td></tr>
+</tbody></table></div>
+
+<p>When scanning for BLE devices, your application receives two kinds of packet: the advertisement packet
+and the scan response packet. Both are broadcast by nearby devices and carry metadata that identifies them
+before a connection is made. The PCARDIO recorder sends a custom advertisement that includes the device
+name <code>PCardio</code>. The scan response packet includes the service UUID, which identifies support for
+the Nordic UART Service.</p>
+
+<p>The recorder uses the 2&nbsp;Mbps PHY introduced in BLE 5.0. To take full advantage of this throughput
+and to ensure compatibility, use BLE 5.0 or higher on the central device.</p>
+
+<p>Three BLE parameters matter for performance:</p>
+<ul>
+<li><strong>Connection interval</strong> &mdash; how often the peripheral and central exchange data. It ranges
+from 7.5&nbsp;milliseconds to 4&nbsp;seconds in 1.25&nbsp;millisecond increments. The actual limits vary by
+operating system and BLE stack.</li>
+<li><strong>ATT MTU</strong> &mdash; the maximum size of each GATT packet. A larger MTU reduces the overhead
+for large messages.</li>
+<li><strong>Data Length Extension (DLE)</strong> &mdash; expands the payload beyond the default 27-byte BLE
+packet limit.</li>
+</ul>
+
+<p>Maximising both ATT MTU and DLE helps ensure that most Core Interface requests fit in a single BLE
+transaction, which improves throughput and reduces latency. More on live streaming is available on the
+<a href="https://pcardiowearables.com/real-time-biosignal-streaming/">real-time biosignal streaming page</a>.</p>
+
+<h3 id="serial-communication"><span class="num">2.2</span>Serial communication</h3>
+
+<p>To use the recorder over a serial (USB) connection, connect it to a USB port with the supplied cable.
+The recorder then appears in the system's list of serial ports and can be identified from the USB device
+metadata, specifically the bus-reported device description and parent properties.</p>
+
+<div class="tw"><table>
+<caption>Serial port identification</caption>
+<thead><tr><th>Property</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Product name</td><td class="m">PCardio</td></tr>
+<tr><td>VID (vendor ID)</td><td class="m">16D0</td></tr>
+<tr><td>PID (product ID)</td><td class="m">06A1</td></tr>
+<tr><td>MAC address</td><td>A unique hardware identifier matching the first part of the QR code printed on the back of the recorder</td></tr>
+</tbody></table></div>
+
+<p>These properties let your application detect the recorder reliably and distinguish it from other
+connected USB peripherals.</p>
+
+<div class="tw"><table>
+<caption>Serial port settings</caption>
+<thead><tr><th>Setting</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Baud rate</td><td class="m">460800</td></tr>
+<tr><td>Parity</td><td class="m">None</td></tr>
+<tr><td>Stop bits</td><td class="m">One</td></tr>
+<tr><td>DTR</td><td>Enabled when opening the port</td></tr>
+</tbody></table></div>
+
+<div class="warn"><b>Cable</b><p>Use a USB cable that supports data transfer. A charge-only cable will not
+establish a serial connection.</p></div>
+</section>
+
+<section id="core-interface">
+<h2><span class="num">3</span>Core interface</h2>
+
+<p>The Core Interface gives direct access to the recorder's memory through four packet types, designed to
+make reading and writing memory blocks straightforward. A packet is built from four fields:</p>
+
+<ul>
+<li><strong>Opcode</strong> &mdash; a single byte that specifies the packet type.</li>
+<li><strong>Address</strong> &mdash; a 32-bit unsigned integer giving the starting memory address of the read
+or write operation.</li>
+<li><strong>Length</strong> &mdash; a 16-bit unsigned integer giving how many bytes to read or write.</li>
+<li><strong>Data</strong> &mdash; a byte array containing the payload: either data read from the recorder, or
+data to be written to it.</li>
+</ul>
+
+<div class="tw"><table>
+<caption>Table 2. Packet fields and byte order</caption>
+<thead><tr><th class="c">Byte 0</th><th class="c">Bytes 1&ndash;4</th><th class="c">Bytes 5&ndash;6</th><th class="c">Bytes 7&ndash;N</th></tr></thead>
+<tbody><tr><td class="c m">Opcode</td><td class="c m">Address</td><td class="c m">Length</td><td class="c m">Data</td></tr></tbody>
+</table></div>
+
+<p>Not every field appears in every packet type. The table below shows which fields each packet type uses.</p>
+
+<div class="tw"><table>
+<caption>Table 3. Format for each packet type</caption>
+<thead><tr><th>Packet type</th><th class="c">Opcode</th><th class="c">Address</th><th class="c">Length</th><th class="c">Data</th></tr></thead>
+<tbody>
+<tr><td>Read</td><td class="c">Used</td><td class="c">Used</td><td class="c">Used</td><td class="c">&mdash;</td></tr>
+<tr><td>Data</td><td class="c">Used</td><td class="c">Used</td><td class="c">Used</td><td class="c">Used</td></tr>
+<tr><td>Abort</td><td class="c">Used</td><td class="c">&mdash;</td><td class="c">&mdash;</td><td class="c">&mdash;</td></tr>
+<tr><td>Stream</td><td class="c">Used</td><td class="c">Used</td><td class="c">Used</td><td class="c">&mdash;</td></tr>
+</tbody></table></div>
+
+<div class="note"><b>Byte order</b><p>All multi-byte fields in the packets use <strong>little-endian</strong>
+format. The examples below show how values are encoded.</p></div>
+
+<div class="note"><b>Fragmentation</b><p>Large Core Interface messages may be split across several smaller
+transport packets because of protocol size limits. Your application should concatenate the fragments and
+wait until the entire message has arrived before parsing it.</p></div>
+
+<div class="warn"><b>One operation at a time</b><p>The PCARDIO recorder supports only one operation at a
+time. Always wait for the current data transaction to complete before starting a new one, and avoid sending
+read or write packets while the recorder is streaming: doing so can cause communication issues or data
+loss.</p></div>
+
+<h3 id="read-packet"><span class="num">3.1</span>Read packet</h3>
+<p>Read packets request a specific number of bytes from a given memory address. Use them to retrieve fixed
+blocks of data.</p>
+<div class="tw"><table>
+<caption>Table 4. Read packet: read 4 bytes from memory address 16</caption>
+<thead><tr><th class="c">0</th><th class="c">1</th><th class="c">2</th><th class="c">3</th><th class="c">4</th><th class="c">5</th><th class="c">6</th></tr></thead>
+<tbody><tr><td class="c m">0x01</td><td class="c m">0x10</td><td class="c m">0x00</td><td class="c m">0x00</td><td class="c m">0x00</td><td class="c m">0x04</td><td class="c m">0x00</td></tr></tbody>
+</table></div>
+
+<h3 id="data-packet-write"><span class="num">3.2</span>Data packet</h3>
+<p>Data packets write data to the recorder, overriding part of its memory. The recorder also sends data
+packets as responses to read or stream requests, carrying the requested payload.</p>
+<div class="tw"><table>
+<caption>Table 5. Data packet: write the value 1 to a 32-bit register at address 16</caption>
+<thead><tr><th class="c">0</th><th class="c">1</th><th class="c">2</th><th class="c">3</th><th class="c">4</th><th class="c">5</th><th class="c">6</th><th class="c">7</th><th class="c">8</th><th class="c">9</th><th class="c">10</th></tr></thead>
+<tbody><tr><td class="c m">0x02</td><td class="c m">0x10</td><td class="c m">0x00</td><td class="c m">0x00</td><td class="c m">0x00</td><td class="c m">0x04</td><td class="c m">0x00</td><td class="c m">0x01</td><td class="c m">0x00</td><td class="c m">0x00</td><td class="c m">0x00</td></tr></tbody>
+</table></div>
+
+<h3 id="abort-packet"><span class="num">3.3</span>Abort packet</h3>
+<p>Abort packets are single-byte commands that interrupt any ongoing data streaming. Use an abort packet to
+stop a continuous stream from the recorder immediately.</p>
+
+<h3 id="stream-packet"><span class="num">3.4</span>Stream packet</h3>
+<p>Stream packets request continuous data streaming. Unlike read packets, they cause the recorder to keep
+sending new data as it becomes available. Streaming is restricted to a specific region of the recorder's
+memory, the <a href="#stream-memory">stream memory</a>.</p>
+<div class="tw"><table>
+<caption>Table 6. Stream packet requesting 237 bytes</caption>
+<thead><tr><th class="c">0</th><th class="c">1</th><th class="c">2</th><th class="c">3</th><th class="c">4</th><th class="c">5</th><th class="c">6</th></tr></thead>
+<tbody><tr><td class="c m">0x04</td><td class="c m">0x00</td><td class="c m">0x00</td><td class="c m">0x00</td><td class="c m">0x10</td><td class="c m">0xED</td><td class="c m">0x00</td></tr></tbody>
+</table></div>
+<p>The address bytes <code>00 00 00 10</code> decode little-endian to <code>0x10000000</code>, which is
+268435456, the start of the stream memory.</p>
+</section>
+
+<section id="serial-interface">
+<h2><span class="num">4</span>Serial interface</h2>
+
+<p>The Serial Interface carries the Core Interface over the serial connection, wrapping each Core Interface
+packet in an ASCII-encoded message. Besides the Core Interface packet, two additional packet types can be
+sent. Serial Interface messages have the following structure:</p>
+
+<ul>
+<li><strong>Prefix</strong> &mdash; a dollar character <code>$</code> (<code>0x24</code>) marking the start of
+the packet.</li>
+<li><strong>Opcode</strong> &mdash; a single character indicating the Serial Interface packet type.</li>
+<li><strong>Data</strong> &mdash; the encapsulated Core Interface packet as a hex-encoded byte array. Every
+byte is two characters in the range <code>0&ndash;9</code> or <code>A&ndash;F</code>. The first two characters
+represent the first byte, the third and fourth the second byte, and so on.</li>
+<li><strong>Postfix</strong> &mdash; a line feed <code>\n</code> (<code>0x0A</code>) marking the end of the
+packet.</li>
+</ul>
+
+<div class="tw"><table>
+<caption>Table 7. Packet fields and byte order of the Serial Interface packets</caption>
+<thead><tr><th class="c">Byte 0</th><th class="c">Byte 1</th><th class="c">Bytes 2 to N-1</th><th class="c">Byte N</th></tr></thead>
+<tbody>
+<tr><td class="c">Prefix</td><td class="c">Opcode</td><td class="c">Data (optional)</td><td class="c">Postfix</td></tr>
+<tr><td class="c m">$</td><td class="c m">T / R / U / B</td><td class="c m">hex</td><td class="c m">\n</td></tr>
+</tbody></table></div>
+
+<h3 id="transmit"><span class="num">4.1</span>Transmit</h3>
+<p>Sends a Core Interface packet to the recorder over the serial interface, using opcode <code>T</code>
+(<code>0x54</code>). If a response is required, the recorder replies with a receive packet.</p>
+<div class="tw"><table>
+<caption>Table 8. Transmit packet</caption>
+<thead><tr><th class="c">0</th><th class="c">1</th><th class="c">2 to N-1</th><th class="c">N</th></tr></thead>
+<tbody>
+<tr><td class="c m">0x24</td><td class="c m">0x54</td><td class="c">Core Interface packet</td><td class="c m">0x0A</td></tr>
+<tr><td class="c m">$</td><td class="c m">T</td><td class="c">&nbsp;</td><td class="c m">\n</td></tr>
+</tbody></table></div>
+
+<h3 id="receive"><span class="num">4.2</span>Receive</h3>
+<p>Sent by the recorder in response to a transmit packet, using opcode <code>R</code>
+(<code>0x52</code>).</p>
+<div class="tw"><table>
+<caption>Table 9. Receive packet</caption>
+<thead><tr><th class="c">0</th><th class="c">1</th><th class="c">2 to N-1</th><th class="c">N</th></tr></thead>
+<tbody>
+<tr><td class="c m">0x24</td><td class="c m">0x52</td><td class="c">Core Interface packet</td><td class="c m">0x0A</td></tr>
+<tr><td class="c m">$</td><td class="c m">R</td><td class="c">&nbsp;</td><td class="c m">\n</td></tr>
+</tbody></table></div>
+
+<h3 id="upgrade"><span class="num">4.3</span>Upgrade</h3>
+<p>Puts the recorder into bootloader mode so that firmware updates can be applied. Opcode <code>U</code>
+(<code>0x55</code>). This packet type has no data field.</p>
+<div class="tw"><table>
+<caption>Table 10. Upgrade packet</caption>
+<thead><tr><th class="c">0</th><th class="c">1</th><th class="c">2</th></tr></thead>
+<tbody>
+<tr><td class="c m">0x24</td><td class="c m">0x55</td><td class="c m">0x0A</td></tr>
+<tr><td class="c m">$</td><td class="c m">U</td><td class="c m">\n</td></tr>
+</tbody></table></div>
+
+<h3 id="reboot"><span class="num">4.4</span>Reboot</h3>
+<p>Hard-resets the PCARDIO recorder. Opcode <code>B</code> (<code>0x42</code>). This packet type has no data
+field.</p>
+<div class="tw"><table>
+<caption>Table 11. Reboot packet</caption>
+<thead><tr><th class="c">0</th><th class="c">1</th><th class="c">2</th></tr></thead>
+<tbody>
+<tr><td class="c m">0x24</td><td class="c m">0x42</td><td class="c m">0x0A</td></tr>
+<tr><td class="c m">$</td><td class="c m">B</td><td class="c m">\n</td></tr>
+</tbody></table></div>
+
+<p>A worked example of this framing, including a request/response session over pyserial, is in
+<a href="https://github.com/2M-Engineering/PCARDIO-Examples/blob/main/Python%20Examples/pcardio_serial.py"><code>pcardio_serial.py</code></a>.</p>
+</section>
+
+<section id="memory-map">
+<h2><span class="num">5</span>Memory map</h2>
+
+<p>The PCARDIO recorder exposes the following memory map over the BLE interface. It is made up of four
+memory locations: info memory, device configuration memory, measurement configuration memory, and stream
+memory.</p>
+
+<div class="tw"><table>
+<caption>Table 12. PCARDIO memory map</caption>
+<thead><tr><th>Name</th><th class="m">Address</th><th class="m">Size</th><th>Type</th><th>Access</th><th class="c">Protected</th><th>Accessible modes</th></tr></thead>
+<tbody>
+<tr><th colspan="6" style="background:#18202b;color:#36c3f2;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase">Info memory</th></tr>
+<tr><td>Id</td><td class="m">0</td><td class="m">8</td><td class="m">UInt64</td><td>read only</td><td class="c">No</td><td>&mdash;</td></tr>
+<tr><td>Address</td><td class="m">8</td><td class="m">8</td><td class="m">UInt64</td><td>read only</td><td class="c">No</td><td>&mdash;</td></tr>
+<tr><td>Version</td><td class="m">16</td><td class="m">4</td><td class="m">UInt8[]</td><td>read only</td><td class="c">No</td><td>&mdash;</td></tr>
+<tr><td>Free space</td><td class="m">20</td><td class="m">4</td><td class="m">UInt32</td><td>read only</td><td class="c">No</td><td>&mdash;</td></tr>
+<tr><td>File size</td><td class="m">24</td><td class="m">4</td><td class="m">UInt32</td><td>read only</td><td class="c">No</td><td>&mdash;</td></tr>
+<tr><td>Battery</td><td class="m">28</td><td class="m">4</td><td class="m">UInt32</td><td>read only</td><td class="c">No</td><td>&mdash;</td></tr>
+<tr><td>Device status</td><td class="m">32</td><td class="m">4</td><td class="m">UInt32</td><td>read only</td><td class="c">No</td><td>&mdash;</td></tr>
+<tr><td>Input error code</td><td class="m">36</td><td class="m">4</td><td class="m">UInt32</td><td>read only</td><td class="c">No</td><td>&mdash;</td></tr>
+<tr><td>Input error timestamp</td><td class="m">40</td><td class="m">4</td><td class="m">UInt32</td><td>read only</td><td class="c">No</td><td>&mdash;</td></tr>
+<tr><td>Hardware version</td><td class="m">44</td><td class="m">1</td><td class="m">UInt8</td><td>read only</td><td class="c">No</td><td>&mdash;</td></tr>
+<tr><td>Hardware variant</td><td class="m">45</td><td class="m">1</td><td class="m">UInt8</td><td>read only</td><td class="c">No</td><td>&mdash;</td></tr>
+<tr><th colspan="6" style="background:#18202b;color:#36c3f2;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase">Device configuration memory</th></tr>
+<tr><td>Pin</td><td class="m">128</td><td class="m">4</td><td class="m">UInt8[]</td><td>read/write</td><td class="c">No</td><td>All modes</td></tr>
+<tr><td>Time</td><td class="m">132</td><td class="m">4</td><td class="m">UInt32</td><td>read/write</td><td class="c">Yes</td><td>All modes</td></tr>
+<tr><td>Button mode</td><td class="m">136</td><td class="m">4</td><td class="m">UInt32</td><td>read/write</td><td class="c">Yes</td><td>Idle only</td></tr>
+<tr><td>Advertising mode</td><td class="m">140</td><td class="m">4</td><td class="m">UInt32</td><td>read/write</td><td class="c">Yes</td><td>Idle only</td></tr>
+<tr><td>Advertising time</td><td class="m">144</td><td class="m">4</td><td class="m">UInt32</td><td>read/write</td><td class="c">Yes</td><td>Idle only</td></tr>
+<tr><th colspan="6" style="background:#18202b;color:#36c3f2;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase">Measurement configuration memory</th></tr>
+<tr><td>User id</td><td class="m">256</td><td class="m">12</td><td class="m">UInt8[]</td><td>read/write</td><td class="c">Yes</td><td>Idle only</td></tr>
+<tr><td>Start time</td><td class="m">268</td><td class="m">4</td><td class="m">UInt32</td><td>read/write</td><td class="c">Yes</td><td>Idle only</td></tr>
+<tr><td>Stop time</td><td class="m">272</td><td class="m">4</td><td class="m">UInt32</td><td>read/write</td><td class="c">Yes</td><td>Idle only</td></tr>
+<tr><td>Sampling configuration</td><td class="m">276</td><td class="m">68</td><td class="m">UInt8[]</td><td>read/write</td><td class="c">Yes</td><td>Idle only</td></tr>
+<tr><th colspan="6" style="background:#18202b;color:#36c3f2;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase">Stream memory</th></tr>
+<tr><td>Stream data</td><td class="m">268435456</td><td class="m">16384</td><td class="m">UInt8[]</td><td>read only</td><td class="c">Yes</td><td>&mdash;</td></tr>
+</tbody></table></div>
+
+<h3 id="info-memory"><span class="num">5.1</span>Info memory</h3>
+<p>Read-only registers that identify the recorder and report its status.</p>
+
+<h4 id="info-id"><span class="num">5.1.1</span>Id</h4>
+<p>A unique 64-bit unsigned integer that serves as the recorder's identifier.</p>
+
+<h4 id="info-address"><span class="num">5.1.2</span>Address</h4>
+<p>The recorder's unique 64-bit MAC address.</p>
+<div class="note"><b>QR code</b><p>The QR code on the back of each PCARDIO recorder combines the address and
+the first four digits of the id in hexadecimal, separated by a dash.</p></div>
+
+<h4 id="info-version"><span class="num">5.1.3</span>Version</h4>
+<p>The firmware version of the recorder, encoded over four bytes.</p>
+<div class="tw"><table>
+<caption>Table 13. Structure of the version register</caption>
+<thead><tr><th class="c">Byte 0</th><th class="c">Byte 1</th><th class="c">Byte 2</th><th class="c">Byte 3</th></tr></thead>
+<tbody><tr><td class="c">Major version</td><td class="c">Minor version</td><td class="c">Revision version</td><td class="c">Interface version</td></tr></tbody>
+</table></div>
+
+<h4 id="info-battery"><span class="num">5.1.4</span>Battery</h4>
+<p>The current battery level as a percentage of a full battery.</p>
+
+<h4 id="info-device-status"><span class="num">5.1.5</span>Device status</h4>
+<p>Reflects the recorder's measurement and connectivity state. Bits 4 to 7 of byte 0 are not used, and
+bytes 1 to 3 are unused.</p>
+<div class="tw"><table>
+<caption>Table 14. Device status register, byte 0</caption>
+<thead><tr><th class="c">Bit 0</th><th class="c">Bit 1</th><th class="c">Bit 2</th><th class="c">Bit 3</th><th class="c">Bits 4&ndash;7</th></tr></thead>
+<tbody><tr><td class="c">Logging</td><td class="c">Streaming</td><td class="c">Docking</td><td class="c">Lead-off</td><td class="c">Not used</td></tr></tbody>
+</table></div>
+
+<h4 id="info-error-code"><span class="num">5.1.6</span>Input error code</h4>
+<p>The most recent input error. See <a href="#input-error-handling">input error handling</a> for the error
+types.</p>
+
+<h4 id="info-error-timestamp"><span class="num">5.1.7</span>Input error timestamp</h4>
+<p>The Unix time in seconds of the most recent input error.</p>
+
+<h4 id="info-hardware-version"><span class="num">5.1.8</span>Hardware version</h4>
+<p>The PCB version of the recorder.</p>
+<div class="tw"><table>
+<caption>Table 15. Hardware version options</caption>
+<thead><tr><th class="m">Value</th><th>Version</th></tr></thead>
+<tbody>
+<tr><td class="m">0</td><td>V2.1</td></tr>
+<tr><td class="m">1</td><td>V2.2</td></tr>
+<tr><td class="m">7</td><td>V1.X</td></tr>
+</tbody></table></div>
+
+<h4 id="info-hardware-variant"><span class="num">5.1.9</span>Hardware variant</h4>
+<p>The hardware variant of the recorder.</p>
+<div class="tw"><table>
+<caption>Table 16. Hardware variant options</caption>
+<thead><tr><th class="m">Value</th><th>Variant</th></tr></thead>
+<tbody>
+<tr><td class="m">0</td><td>EMG</td></tr>
+<tr><td class="m">1</td><td>1 lead + respiration</td></tr>
+<tr><td class="m">2</td><td>6 leads</td></tr>
+</tbody></table></div>
+
+<h3 id="device-configuration-memory"><span class="num">5.2</span>Device configuration memory</h3>
+<p>Registers that modify the behaviour of the recorder.</p>
+
+<h4 id="config-pin"><span class="num">5.2.1</span>Pin</h4>
+<p>Controls access to the protected registers. Protected registers cannot be read or written until the pin
+has been set. To enable access, write the following byte sequence to this register.</p>
+<div class="tw"><table>
+<caption>Table 17. Pin register value</caption>
+<thead><tr><th class="c">Byte 0</th><th class="c">Byte 1</th><th class="c">Byte 2</th><th class="c">Byte 3</th></tr></thead>
+<tbody><tr><td class="c m">0x6C</td><td class="c m">0x6F</td><td class="c m">0x76</td><td class="c m">0x65</td></tr></tbody>
+</table></div>
+
+<h4 id="config-time"><span class="num">5.2.2</span>Time</h4>
+<p>Holds the current Unix time in seconds. If the recorder has been reset or left unused for an extended
+period, the correct time may need to be set manually.</p>
+
+<h4 id="config-button-mode"><span class="num">5.2.3</span>Button mode</h4>
+<p>Controls how a long button press affects the measurement status.</p>
+<div class="tw"><table>
+<caption>Table 18. Button configuration options</caption>
+<thead><tr><th class="m">Value</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td class="m">0</td><td>No action</td></tr>
+<tr><td class="m">1</td><td>Start logging enabled</td></tr>
+<tr><td class="m">2</td><td>Start and stop logging enabled</td></tr>
+</tbody></table></div>
+
+<h4 id="config-advertising-mode"><span class="num">5.2.4</span>Advertising mode</h4>
+<p>Controls the BLE advertising behaviour.</p>
+<div class="tw"><table>
+<caption>Table 19. Advertising configuration options</caption>
+<thead><tr><th class="m">Value</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td class="m">0</td><td>BLE is disabled</td></tr>
+<tr><td class="m">1</td><td>Starts advertising after USB disconnection only</td></tr>
+<tr><td class="m">2</td><td>Starts advertising after USB disconnection or button press</td></tr>
+<tr><td class="m">3</td><td>Advertising always on</td></tr>
+</tbody></table></div>
+
+<h4 id="config-advertising-time"><span class="num">5.2.5</span>Advertising time</h4>
+<p>Sets the BLE advertising duration in seconds. The maximum value is 180&nbsp;seconds.</p>
+
+<h3 id="measuring-configuration-memory"><span class="num">5.3</span>Measuring configuration memory</h3>
+<p>Registers that determine the state and configuration of the measurement.</p>
+
+<h4 id="measurement-user-id"><span class="num">5.3.1</span>User id</h4>
+<p>Space for up to 12 characters identifying who the data belongs to.</p>
+<div class="warn"><b>Privacy</b><p>The recorder does not encrypt the value written to the user id register.
+Do not write names or other confidential information in plain text; encrypt the value before writing it to
+the recorder.</p></div>
+
+<h4 id="measurement-start-time"><span class="num">5.3.2</span>Start time</h4>
+<p>Schedules the Unix time in seconds at which the recording should start. Logging starts automatically as
+soon as the time register exceeds this value.</p>
+
+<h4 id="measurement-stop-time"><span class="num">5.3.3</span>Stop time</h4>
+<p>Schedules the Unix time in seconds at which the recording should stop. Logging stops automatically as
+soon as the time register exceeds this value.</p>
+
+<h4 id="measurement-sampling-config"><span class="num">5.3.4</span>Sampling configuration</h4>
+<p>Holds the configuration used for the measurement: which sensors are enabled, and their gain, sample rate
+and data type. See <a href="#sampling-configuration">sampling configuration</a> for the structure of this
+register.</p>
+
+<h3 id="stream-memory"><span class="num">5.4</span>Stream memory</h3>
+<p>Holds the most recent data packet to be streamed. The length of a data packet depends on the sampling
+configuration; the maximum size is 16384&nbsp;bytes. The format and parsing of these packets is described
+in <a href="#data-packet">data packet</a>.</p>
+</section>
+
+<section id="data-packet">
+<h2><span class="num">6</span>Data packet</h2>
+
+<p>PCARDIO data packets have a variable size that depends on the sampling configuration. Each packet starts
+with a 13-byte header, followed by the data payload.</p>
+
+<div class="tw"><table>
+<caption>Table 20. General layout of a PCARDIO data packet</caption>
+<thead><tr><th class="m">Byte offset</th><th>Content</th></tr></thead>
+<tbody>
+<tr><td class="m">0&ndash;12</td><td>Header</td></tr>
+<tr><td class="m">13&ndash;(12+N)</td><td>Payload, N bytes of sensor data</td></tr>
+</tbody></table></div>
+
+<h3 id="packet-header"><span class="num">6.1</span>Header</h3>
+<p>The 13-byte header encodes five fields.</p>
+<div class="tw"><table>
+<caption>Table 21. Structure of the data packet header</caption>
+<thead><tr><th class="m">Byte offset</th><th>Field</th><th class="m">Size</th></tr></thead>
+<tbody>
+<tr><td class="m">0&ndash;3</td><td>Time</td><td class="m">4 bytes</td></tr>
+<tr><td class="m">4&ndash;7</td><td>Ticks</td><td class="m">4 bytes</td></tr>
+<tr><td class="m">8</td><td>Status</td><td class="m">1 byte</td></tr>
+<tr><td class="m">9&ndash;10</td><td>Payload size</td><td class="m">2 bytes</td></tr>
+<tr><td class="m">11&ndash;12</td><td>Checksum</td><td class="m">2 bytes</td></tr>
+</tbody></table></div>
+
+<h4 id="header-time"><span class="num">6.1.1</span>Time</h4>
+<p>Unix time in seconds of the last sample in the buffer.</p>
+
+<h4 id="header-ticks"><span class="num">6.1.2</span>Ticks</h4>
+<p>The number of elapsed ticks from a 32.768&nbsp;kHz clock that must be added to the timestamp. Since that
+clock produces 32,768 ticks per second, convert the value to standard ticks of 100-nanosecond intervals by
+multiplying by 10,000,000 / 32,768.</p>
+
+<h4 id="header-status"><span class="num">6.1.3</span>Status</h4>
+<p>A UInt8 register holding the current logging, streaming, connectivity and battery status.</p>
+<div class="tw"><table>
+<caption>Table 22. Status field</caption>
+<thead><tr><th class="c">Bit 0</th><th class="c">Bit 1</th><th class="c">Bit 2</th><th class="c">Bit 3</th><th class="c">Bits 4&ndash;7</th></tr></thead>
+<tbody><tr><td class="c">Logging</td><td class="c">Streaming</td><td class="c">BLE status</td><td class="c">Battery status</td><td class="c">Not used</td></tr></tbody>
+</table></div>
+
+<div class="tw"><table>
+<caption>Table 23. BLE status values</caption>
+<thead><tr><th class="m">Value</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td class="m">0</td><td>BLE is off</td></tr>
+<tr><td class="m">1</td><td>Device is advertising</td></tr>
+<tr><td class="m">2</td><td>Device is connected</td></tr>
+</tbody></table></div>
+
+<div class="tw"><table>
+<caption>Table 24. Battery status values</caption>
+<thead><tr><th class="m">Value</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td class="m">0</td><td>Battery is between 0 and 25%</td></tr>
+<tr><td class="m">1</td><td>Battery is between 25 and 50%</td></tr>
+<tr><td class="m">2</td><td>Battery is between 50 and 75%</td></tr>
+<tr><td class="m">3</td><td>Battery is between 75 and 100%</td></tr>
+</tbody></table></div>
+
+<h4 id="header-payload-size"><span class="num">6.1.4</span>Payload size</h4>
+<p>The length of the sensor data in bytes.</p>
+
+<h4 id="header-checksum"><span class="num">6.1.5</span>Checksum</h4>
+<p>Validates the integrity of the sensor data. It is computed with <strong>CRC-16-CCITT</strong>, polynomial
+<code>0x1021</code>, initial value <code>0xFFFF</code>.</p>
+
+<h3 id="packet-payload"><span class="num">6.2</span>Payload</h3>
+<p>The payload contains the data from every enabled sensor. The order and size of each sensor data block is
+determined by its sample rate, data type and position in the sampling configuration. See
+<a href="#sampling-configuration">sampling configuration</a> for a worked example.</p>
+</section>
+
+<section id="sampling-configuration">
+<h2><span class="num">7</span>Sampling configuration</h2>
+
+<p>The PCARDIO recorder offers extensive customisation so that a measurement can be tailored precisely to
+its purpose. Four aspects are under your control:</p>
+
+<ul>
+<li><strong>Sensor selection</strong> &mdash; choose which sensors are active, based on the data each use
+case requires.</li>
+<li><strong>Gain adjustment</strong> &mdash; set individual gain levels per sensor to keep data accurate and
+optimise the signal-to-noise ratio.</li>
+<li><strong>Sample rate configuration</strong> &mdash; define the sample rate per sensor to balance
+resolution against resource use.</li>
+<li><strong>Data type customisation</strong> &mdash; choose the data format that suits the application,
+optimising for storage or precision.</li>
+</ul>
+
+<p>This flexibility makes the recorder adaptable across scenarios, from precise diagnostics to research
+applications that need tailored data collection. The full range of signals the platform supports is
+described on the <a href="https://pcardiowearables.com/wearable-biosignal-sensors/">sensors and signals page</a>.</p>
+
+<p>The configuration is set by writing the 68-byte sampling configuration register. The register holds a
+32-bit unsigned integer giving the number of enabled sensors, followed by an array of up to 16 sensor
+configurations.</p>
+
+<div class="tw"><table>
+<caption>Table 25. Sampling configuration register</caption>
+<thead><tr><th class="m">Byte offset</th><th>Content</th></tr></thead>
+<tbody>
+<tr><td class="m">0&ndash;3</td><td>Sensor count, UInt32</td></tr>
+<tr><td class="m">4&ndash;7</td><td>Config sensor[0]</td></tr>
+<tr><td class="m">8&ndash;11</td><td>Config sensor[1]</td></tr>
+<tr><td class="m">&hellip;</td><td>&hellip;</td></tr>
+<tr><td class="m">64&ndash;67</td><td>Config sensor[15]</td></tr>
+</tbody></table></div>
+
+<h3 id="sensor-configuration"><span class="num">7.1</span>Sensor configuration</h3>
+
+<p>Each sensor configuration contains four unsigned 8-bit fields.</p>
+
+<div class="tw"><table>
+<caption>Table 26. Structure of the sensor configuration</caption>
+<thead><tr><th class="c">Byte 0</th><th class="c">Byte 1</th><th class="c">Byte 2</th><th class="c">Byte 3</th></tr></thead>
+<tbody><tr><td class="c">Sensor ID</td><td class="c">Sensor gain ID</td><td class="c">Sample rate ID</td><td class="c">Data type ID</td></tr></tbody>
+</table></div>
+
+<p>Every sensor supports a defined set of configuration options; not all options are available for every
+sensor. Each sensor produces data according to one or more data type IDs. A data type definition specifies
+the data format: the number of elements, the total size in bytes, whether values are signed, the physical
+units, and the analog and digital ranges.</p>
+
+<div class="tw"><table>
+<caption>Table 27. Sensor gain IDs</caption>
+<thead><tr><th>Gain ID</th><th class="c m">0</th><th class="c m">1</th><th class="c m">2</th><th class="c m">3</th><th class="c m">4</th><th class="c m">5</th><th class="c m">6</th><th class="c m">7</th></tr></thead>
+<tbody><tr><td>Gain value</td><td class="c m">&times;1</td><td class="c m">&times;2</td><td class="c m">&times;3</td><td class="c m">&times;4</td><td class="c m">&times;6</td><td class="c m">&times;8</td><td class="c m">&times;12</td><td class="c m">&times;16</td></tr></tbody>
+</table></div>
+
+<div class="tw"><table>
+<caption>Table 28. Sample rate IDs</caption>
+<thead><tr><th>Sample rate ID</th><th class="c m">0</th><th class="c m">1</th><th class="c m">2</th><th class="c m">3</th><th class="c m">4</th><th class="c m">5</th><th class="c m">6</th><th class="c m">7</th><th class="c m">8</th><th class="c m">9</th><th class="c m">10</th></tr></thead>
+<tbody><tr><td>Sample rate (Hz)</td><td class="c m">1000</td><td class="c m">800</td><td class="c m">500</td><td class="c m">400</td><td class="c m">250</td><td class="c m">200</td><td class="c m">100</td><td class="c m">50</td><td class="c m">25</td><td class="c m">10</td><td class="c m">5</td></tr></tbody>
+</table></div>
+
+<div class="tw"><table>
+<caption>Table 29. Sensor IDs and their valid configurations</caption>
+<thead><tr><th>Sensor</th><th class="c">ID</th><th>Sensor gains</th><th>Sample rates</th><th class="c">Data types</th></tr></thead>
+<tbody>
+<tr><td>Battery</td><td class="m c">0</td><td>0&nbsp;(&times;1)</td><td>10&nbsp;(5&nbsp;Hz)</td><td class="m c">0</td></tr>
+<tr><td>ECG 1-channel</td><td class="m c">1</td><td>0&nbsp;(&times;1), 1&nbsp;(&times;2), 2&nbsp;(&times;3), 4&nbsp;(&times;6), 6&nbsp;(&times;12)</td><td>0&nbsp;(1000&nbsp;Hz), 2&nbsp;(500&nbsp;Hz), 4&nbsp;(250&nbsp;Hz)</td><td class="m c">1</td></tr>
+<tr><td>Respiration BioZ</td><td class="m c">2</td><td>0&nbsp;(&times;1), 1&nbsp;(&times;2), 2&nbsp;(&times;3), 4&nbsp;(&times;6), 6&nbsp;(&times;12)</td><td>0&nbsp;(1000&nbsp;Hz), 2&nbsp;(500&nbsp;Hz), 4&nbsp;(250&nbsp;Hz)</td><td class="m c">2</td></tr>
+<tr><td>ECG 2-channels</td><td class="m c">3</td><td>0&nbsp;(&times;1), 1&nbsp;(&times;2), 2&nbsp;(&times;3), 4&nbsp;(&times;6), 6&nbsp;(&times;12)</td><td>0&nbsp;(1000&nbsp;Hz), 2&nbsp;(500&nbsp;Hz), 4&nbsp;(250&nbsp;Hz)</td><td class="m c">3</td></tr>
+<tr><td>EMG 2-channels</td><td class="m c">4</td><td>0&nbsp;(&times;1), 1&nbsp;(&times;2), 2&nbsp;(&times;3), 4&nbsp;(&times;6), 6&nbsp;(&times;12)</td><td>0&nbsp;(1000&nbsp;Hz), 2&nbsp;(500&nbsp;Hz), 4&nbsp;(250&nbsp;Hz)</td><td class="m c">3</td></tr>
+<tr><td>Accelerometer</td><td class="m c">5</td><td>0&nbsp;(&times;1), 1&nbsp;(&times;2), 3&nbsp;(&times;4), 5&nbsp;(&times;8)</td><td>1&nbsp;(800&nbsp;Hz), 3&nbsp;(400&nbsp;Hz), 5&nbsp;(200&nbsp;Hz), 6&nbsp;(100&nbsp;Hz), 7&nbsp;(50&nbsp;Hz)</td><td class="m c">4</td></tr>
+<tr><td>Gyroscope</td><td class="m c">6</td><td>0&nbsp;(&times;1), 1&nbsp;(&times;2), 3&nbsp;(&times;4), 5&nbsp;(&times;8), 7&nbsp;(&times;16)</td><td>1&nbsp;(800&nbsp;Hz), 3&nbsp;(400&nbsp;Hz), 5&nbsp;(200&nbsp;Hz), 6&nbsp;(100&nbsp;Hz), 7&nbsp;(50&nbsp;Hz)</td><td class="m c">5, 6</td></tr>
+<tr><td>Magnetometer</td><td class="m c">7</td><td>0&nbsp;(&times;1)</td><td>6&nbsp;(100&nbsp;Hz), 7&nbsp;(50&nbsp;Hz)</td><td class="m c">7</td></tr>
+<tr><td>Button marker</td><td class="m c">10</td><td>0&nbsp;(&times;1)</td><td>10&nbsp;(5&nbsp;Hz)</td><td class="m c">8</td></tr>
+<tr><td>Tap marker</td><td class="m c">11</td><td>0&nbsp;(&times;1)</td><td>10&nbsp;(5&nbsp;Hz)</td><td class="m c">8</td></tr>
+<tr><td>Lead-off</td><td class="m c">12</td><td>0&nbsp;(&times;1)</td><td>10&nbsp;(5&nbsp;Hz)</td><td class="m c">8</td></tr>
+</tbody></table></div>
+
+<div class="tw"><table>
+<caption>Table 30. Data type IDs and their definitions</caption>
+<thead><tr><th class="c">Data type ID</th><th>Units</th><th class="c">Total size (bytes)</th><th class="c">Elements</th><th class="c">Signed</th><th>Analog min</th><th>Analog max</th><th>Digital min</th><th>Digital max</th></tr></thead>
+<tbody>
+<tr><td class="m c">0</td><td>%</td><td class="m c">1</td><td class="m c">1</td><td class="c">No</td><td class="m">0</td><td class="m">100</td><td class="m">0</td><td class="m">100</td></tr>
+<tr><td class="m c">1</td><td>mV</td><td class="m c">3</td><td class="m c">1</td><td class="c">Yes</td><td class="m">-2420</td><td class="m">2420</td><td class="m">-8388608</td><td class="m">8388607</td></tr>
+<tr><td class="m c">2</td><td>ohm</td><td class="m c">3</td><td class="m c">1</td><td class="c">Yes</td><td class="m">-80666.67</td><td class="m">80666.67</td><td class="m">-262144</td><td class="m">262143</td></tr>
+<tr><td class="m c">3</td><td>mV</td><td class="m c">6</td><td class="m c">2</td><td class="c">Yes</td><td class="m">-2420</td><td class="m">2420</td><td class="m">-8388608</td><td class="m">8388607</td></tr>
+<tr><td class="m c">4</td><td>G</td><td class="m c">6</td><td class="m c">3</td><td class="c">Yes</td><td class="m">-16</td><td class="m">16</td><td class="m">-32768</td><td class="m">32767</td></tr>
+<tr><td class="m c">5</td><td>deg/s</td><td class="m c">6</td><td class="m c">3</td><td class="c">Yes</td><td class="m">-2000</td><td class="m">2000</td><td class="m">-28571</td><td class="m">28570</td></tr>
+<tr><td class="m c">6</td><td>rad/s</td><td class="m c">6</td><td class="m c">3</td><td class="c">Yes</td><td class="m">-34.906585</td><td class="m">34.906585</td><td class="m">-28571</td><td class="m">28570</td></tr>
+<tr><td class="m c">7</td><td>gauss</td><td class="m c">6</td><td class="m c">3</td><td class="c">Yes</td><td class="m">-49.125</td><td class="m">49.125</td><td class="m">-32768</td><td class="m">32767</td></tr>
+<tr><td class="m c">8</td><td>unitless</td><td class="m c">1</td><td class="m c">1</td><td class="c">No</td><td class="m">0</td><td class="m">1</td><td class="m">0</td><td class="m">1</td></tr>
+</tbody></table></div>
+
+<h4 id="digital-to-analog">Converting digital samples to physical values</h4>
+<p>The general formula to convert a digital value to its analog equivalent is:</p>
+<pre><code>value_A = ( (max_A - min_A) / (max_D - min_D) * (value_D - max_D) + max_A ) / gain</code></pre>
+<p>where the subscripts A and D mean analog and digital respectively.</p>
+
+<div class="note"><b>Example</b><p>For a sensor gain of 8 and a default analog range of &plusmn;16, the
+actual range becomes &plusmn;2.</p></div>
+
+<h4 id="packet-size">Calculating the data packet size</h4>
+<p>Because the recorder is optimised for throughput, the sampling configuration determines the size of the
+data packets. The pseudocode below calculates the packet size and the start index of each enabled
+sensor's data.</p>
+
+<pre><code>packet_size = 13
+for i = 0 to count do
+    start_address[i] = packet_size
+    packet_size += sensors[i].data_type.total_size * (sensors[i].sample_rate / 5)</code></pre>
+
+<div class="note"><b>Why divide by five</b><p>The sample rate is divided by 5 because the PCARDIO recorder
+produces five data packets per second. The total size for each data type is in table&nbsp;30.</p></div>
+
+<h4 id="worked-example">Worked example</h4>
+<p>Suppose the accelerometer, the button marker and the battery level are enabled, in that order:</p>
+<ul>
+<li>Accelerometer &mdash; 50&nbsp;Hz sample rate, measured in G</li>
+<li>Button marker &mdash; 5&nbsp;Hz sample rate, default unitless data type</li>
+<li>Battery level &mdash; 5&nbsp;Hz sample rate, measured as a percentage</li>
+</ul>
+
+<div class="tw"><table>
+<caption>Table 32. Sampling configuration example</caption>
+<thead><tr><th>Field</th><th class="c">Count</th><th class="c">Sensor 0 (accelerometer)</th><th class="c">Sensor 1 (button marker)</th><th class="c">Sensor 2 (battery)</th></tr></thead>
+<tbody>
+<tr><td>Sensor ID</td><td class="c m">0x03</td><td class="c m">0x05</td><td class="c m">0x0A</td><td class="c m">0x00</td></tr>
+<tr><td>Sample rate ID</td><td class="c">&mdash;</td><td class="c m">0x07</td><td class="c m">0x0A</td><td class="c m">0x0A</td></tr>
+<tr><td>Data type ID</td><td class="c">&mdash;</td><td class="c m">0x04</td><td class="c m">0x08</td><td class="c m">0x00</td></tr>
+</tbody></table></div>
+
+<p>This configuration produces a data packet 75&nbsp;bytes long: a 13-byte header, ten accelerometer
+samples of 6&nbsp;bytes each, one button marker byte and one battery byte.</p>
+
+<div class="tw"><table>
+<caption>Table 33. Data packet example, 75 bytes</caption>
+<thead><tr><th class="m">Byte offset</th><th>Content</th></tr></thead>
+<tbody>
+<tr><td class="m">0&ndash;12</td><td>Header</td></tr>
+<tr><td class="m">13&ndash;72</td><td>Accelerometer samples 0 to 9, 6 bytes each (X, Y, Z)</td></tr>
+<tr><td class="m">73</td><td>Button marker</td></tr>
+<tr><td class="m">74</td><td>Battery</td></tr>
+</tbody></table></div>
+
+<div class="note"><b>Order</b><p>The order of the sensor data in the payload is the same as the order of the
+sensors in the sampling configuration. The payload carries no sensor identification of its own, so a
+parser must be given the configuration the data was recorded with.</p></div>
+</section>
+
+<section id="file-interface">
+<h2><span class="num">8</span>File interface</h2>
+
+<p>When the recorder is connected through the docking station, the file interface becomes available. It
+lets you set the recorder and measurement configuration and access recorded data as ordinary files. Three
+files are present: <code>config.txt</code>, <code>data_YYYYMMddHHmmss.txt</code> and
+<code>log.txt</code>.</p>
+
+<h3 id="configuration-file"><span class="num">8.1</span>Configuration file</h3>
+<p><code>config.txt</code> contains part of the info memory, the recorder configuration memory and the
+measurement configuration memory. It has a fixed length of 144&nbsp;bytes and is required for the recorder
+to work.</p>
+
+<div class="warn"><b>Required file</b><p>If <code>config.txt</code> is missing the recorder enters an error
+state, and returns to normal operation only once the file is restored.</p></div>
+
+<p>Editing this file has the same effect as changing the memory registers over wireless BLE. The new
+configuration is read when the recorder is disconnected from the docking station. The prefix and postfix
+hold fixed values.</p>
+
+<div class="tw"><table>
+<caption>Table 34. Structure of the configuration file</caption>
+<thead><tr><th class="m">Byte offset</th><th>Field</th><th class="m">Size</th></tr></thead>
+<tbody>
+<tr><td class="m">0&ndash;7</td><td>Prefix, <code>50 43 41 52 44 49 4F 00</code></td><td class="m">8</td></tr>
+<tr><td class="m">8&ndash;15</td><td>Id</td><td class="m">8</td></tr>
+<tr><td class="m">16&ndash;23</td><td>BLE address</td><td class="m">8</td></tr>
+<tr><td class="m">24&ndash;27</td><td>Version</td><td class="m">4</td></tr>
+<tr><td class="m">28&ndash;31</td><td>Button mode</td><td class="m">4</td></tr>
+<tr><td class="m">32&ndash;35</td><td>Advertising mode</td><td class="m">4</td></tr>
+<tr><td class="m">36&ndash;39</td><td>Advertising time</td><td class="m">4</td></tr>
+<tr><td class="m">40&ndash;51</td><td>Unused</td><td class="m">12</td></tr>
+<tr><td class="m">52&ndash;63</td><td>User id</td><td class="m">12</td></tr>
+<tr><td class="m">64&ndash;67</td><td>Start time</td><td class="m">4</td></tr>
+<tr><td class="m">68&ndash;71</td><td>Stop time</td><td class="m">4</td></tr>
+<tr><td class="m">72&ndash;139</td><td>Sampling configuration</td><td class="m">68</td></tr>
+<tr><td class="m">140&ndash;143</td><td>Postfix, <code>0D 0A 0D 0A</code></td><td class="m">4</td></tr>
+</tbody></table></div>
+
+<h3 id="data-files"><span class="num">8.2</span>Data files</h3>
+<p>When the recorder logs data it creates a file named <code>data_</code> followed by the file creation
+date as <code>YYYYMMddHHmmss</code>:</p>
+<ul>
+<li><code>YYYY</code> &mdash; the year</li>
+<li><code>MM</code> &mdash; the month</li>
+<li><code>dd</code> &mdash; the day</li>
+<li><code>HH</code> &mdash; the hours, from 0 to 24</li>
+<li><code>mm</code> &mdash; the minutes</li>
+<li><code>ss</code> &mdash; the seconds</li>
+</ul>
+
+<p>A data file has a maximum length of 512&nbsp;MB. When it reaches that size the recorder closes it and
+creates a new file to continue logging into. A new file is also created every time the recorder is reset,
+so a recording interrupted by charging is split into at least two files: one before charging and one
+after.</p>
+
+<p>The header of a data file holds a copy of the configuration file, followed by the start and stop time of
+the file. The rest of the file is a sequence of data packets. Use the sampling configuration from the file
+header when parsing them.</p>
+
+<div class="tw"><table>
+<caption>Table 35. Structure of the data files</caption>
+<thead><tr><th class="m">Byte offset</th><th>Field</th></tr></thead>
+<tbody>
+<tr><td class="m">0&ndash;143</td><td>Copy of <code>config.txt</code></td></tr>
+<tr><td class="m">144&ndash;147</td><td>File start time</td></tr>
+<tr><td class="m">148&ndash;151</td><td>File stop time</td></tr>
+<tr><td class="m">152 onwards</td><td>Data packets, each of the size given by the sampling configuration</td></tr>
+</tbody></table></div>
+
+<div class="note"><b>Housekeeping</b><p>Remove the data files from the recorder once they have been copied
+to local disk, so that the recorder's memory does not fill up.</p></div>
+
+<h3 id="log-file"><span class="num">8.3</span>Log file</h3>
+<p>The log file is generated automatically. The recorder writes information to it that helps diagnose
+unexpected behaviour. Copy this file when downloading data and then remove it, so that it does not grow
+large.</p>
+</section>
+
+<section id="input-error-handling">
+<h2><span class="num">9</span>Input error handling</h2>
+
+<p>Reading or writing device memory can result in an invalid operation. When that happens the recorder
+ignores the instruction and reports the problem by updating the input error code and timestamp registers.
+Five error types can be reported:</p>
+
+<ul>
+<li><strong>Read-only error</strong> &mdash; writing to a read-only register.</li>
+<li><strong>Invalid address</strong> &mdash; the address field is outside the memory map.</li>
+<li><strong>Invalid length</strong> &mdash; the length is bigger than the memory.</li>
+<li><strong>Invalid data</strong> &mdash; the data contains invalid values for one of the registers being
+written.</li>
+<li><strong>Invalid state</strong> &mdash; the measurement configuration was modified while the recorder is
+logging data.</li>
+</ul>
+
+<div class="tw"><table>
+<caption>Table 36. Error code options</caption>
+<thead><tr><th class="m">Error code</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td class="m">0</td><td>No error</td></tr>
+<tr><td class="m">1</td><td>Read-only error</td></tr>
+<tr><td class="m">2</td><td>Invalid address</td></tr>
+<tr><td class="m">3</td><td>Invalid length</td></tr>
+<tr><td class="m">4</td><td>Invalid data</td></tr>
+<tr><td class="m">5</td><td>Invalid state</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="good-practices">
+<h2><span class="num">10</span>Good practices</h2>
+
+<h3 id="multiple-fields"><span class="num">10.1</span>Reading and writing multiple fields</h3>
+<p>Reading from and writing to device memory can be done in larger blocks that span several fields of the
+memory map. Note that a number of memory locations require the pin to have been written before reading or
+writing is allowed.</p>
+
+<h3 id="single-operations"><span class="num">10.2</span>Single operations</h3>
+<p>The recorder handles a single operation at a time. Wait for a data transaction to complete before
+starting a new one. Every packet sent to the recorder results in one or more packets sent back, and those
+returned packets can be used to trigger the next transaction. Avoid sending read or data packets while the
+recorder is streaming: send an abort packet, perform the read or write operations you need, then restart
+the stream.</p>
+
+<h3 id="battery-monitoring"><span class="num">10.3</span>Battery and data size monitoring</h3>
+<p>Read the battery level and the size of the data file frequently, to avoid reaching a low-power or
+full-storage state.</p>
+<p>In low-power mode the recorder stops responding, and you need to wait until the battery has charged
+enough before using it again. With no storage left, the recorder will not start a recording, or will stop
+one that is in progress.</p>
+
+<h3 id="quick-start"><span class="num">10.4</span>Quick start</h3>
+<p>The diagram below shows the steps to set up and record a measurement.</p>
+
+<p>The first step after connecting is to write to the pin register. Next, make sure the recorder's time is
+accurate; this matters most when scheduling a measurement, and the time register should be updated whenever
+it differs from the host clock by more than one second. To schedule a measurement, change the measurement
+configuration either by editing <code>config.txt</code> or by updating the measurement configuration
+registers over wireless BLE. Once the measurement is finished and the data downloaded, leave only
+<code>config.txt</code> on the recorder so that its memory does not fill up.</p>
+
+<figure>
+
+<svg class="flow" viewBox="0 0 760 700" role="img" xmlns="http://www.w3.org/2000/svg"
+     aria-labelledby="flow-title flow-desc">
+  <title id="flow-title">Flow to set up a measurement and record data</title>
+  <desc id="flow-desc">Connect via docking, write the pin register, check whether the time is synced and
+  set the time register if it is not, update the config file with the new recorder and measurement
+  configurations, disconnect from docking, wait until the recording is done, then connect via docking,
+  download the data files and remove the old data files.</desc>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6b80" stroke="none"/>
+    </marker>
+  </defs>
+  <g text-anchor="middle">
+    <rect x="250" y="10" width="200" height="40" rx="20"/>
+    <text x="350" y="35">Connect via docking</text>
+    <line x1="350" y1="50" x2="350" y2="78" marker-end="url(#ah)"/>
+
+    <rect x="250" y="80" width="200" height="40" rx="3"/>
+    <text x="350" y="105">Write pin register</text>
+    <line x1="350" y1="120" x2="350" y2="148" marker-end="url(#ah)"/>
+
+    <path class="node" d="M350,150 L470,195 L350,240 L230,195 Z"/>
+    <text x="350" y="200">Time synced</text>
+    <text class="lbl" x="200" y="186" text-anchor="end">No</text>
+    <text class="lbl" x="366" y="262" text-anchor="start">Yes</text>
+    <text class="lbl" x="490" y="190" text-anchor="start">Update when the difference</text>
+    <text class="lbl" x="490" y="206" text-anchor="start">is bigger than 1 s</text>
+
+    <path class="arrow" d="M230,195 L100,195 L100,215" marker-end="url(#ah)"/>
+    <rect x="20" y="218" width="160" height="40" rx="3"/>
+    <text x="100" y="243">Set time register</text>
+    <path class="arrow" d="M100,258 L100,285 L350,285"/>
+
+    <line x1="350" y1="240" x2="350" y2="298" marker-end="url(#ah)"/>
+    <rect x="250" y="300" width="200" height="40" rx="3"/>
+    <text x="350" y="325">Update config file</text>
+    <text class="lbl" x="470" y="316" text-anchor="start">Set new recorder and</text>
+    <text class="lbl" x="470" y="332" text-anchor="start">measurement configurations</text>
+    <line x1="350" y1="340" x2="350" y2="368" marker-end="url(#ah)"/>
+
+    <rect x="250" y="370" width="200" height="48" rx="3"/>
+    <text x="350" y="390">Disconnect from</text>
+    <text x="350" y="408">docking</text>
+    <line x1="350" y1="418" x2="350" y2="446" marker-end="url(#ah)"/>
+
+    <path class="node" d="M350,448 L470,493 L350,538 L230,493 Z"/>
+    <text x="350" y="498">Recording done</text>
+    <text class="lbl" x="486" y="484" text-anchor="start">Yes</text>
+    <text class="lbl" x="366" y="560" text-anchor="start">No</text>
+
+    <path class="arrow" d="M350,538 L350,565 L190,565" marker-end="url(#ah)"/>
+    <rect x="30" y="545" width="160" height="40" rx="3"/>
+    <text x="110" y="570">Wait</text>
+    <path class="arrow" d="M110,545 L110,493 L228,493" marker-end="url(#ah)"/>
+
+    <path class="arrow" d="M470,493 L540,493" marker-end="url(#ah)"/>
+    <rect x="542" y="473" width="200" height="40" rx="3"/>
+    <text x="642" y="498">Connect via docking</text>
+    <line x1="642" y1="513" x2="642" y2="541" marker-end="url(#ah)"/>
+    <rect x="542" y="543" width="200" height="40" rx="3"/>
+    <text x="642" y="568">Download data files</text>
+    <line x1="642" y1="583" x2="642" y2="611" marker-end="url(#ah)"/>
+    <rect x="542" y="613" width="200" height="40" rx="3"/>
+    <text x="642" y="638">Remove old data files</text>
+  </g>
+</svg>
+
+<figcaption>Figure 1. Flow to set up a measurement and record data.</figcaption>
+</figure>
+
+<p>A runnable version of this sequence is in
+<a href="https://github.com/2M-Engineering/PCARDIO-Examples/blob/main/Python%20Examples/">the Python examples</a>, and a step-by-step walkthrough is on
+the <a href="https://pcardiowearables.com/support/quick-start/">quick start page</a>.</p>
+</section>
+
+<section id="experimental-sensors">
+<h2><span class="num">11</span>Experimental sensors</h2>
+
+<p>The sensors and data types below are experimental and are available only through specific firmware and
+recorder holders. Treat them as subject to change.</p>
+
+<div class="tw"><table>
+<caption>Table 37. Experimental sensor IDs and their valid configurations</caption>
+<thead><tr><th>Sensor</th><th class="c">ID</th><th>Sensor gains</th><th>Sample rates</th><th class="c">Data types</th></tr></thead>
+<tbody>
+<tr><td>PPG</td><td class="m c">13</td><td>0&nbsp;(&times;1)</td><td>3&nbsp;(400&nbsp;Hz), 5&nbsp;(200&nbsp;Hz), 6&nbsp;(100&nbsp;Hz), 7&nbsp;(50&nbsp;Hz)</td><td class="m c">10</td></tr>
+<tr><td>Temperature</td><td class="m c">14</td><td>0&nbsp;(&times;1)</td><td>10&nbsp;(5&nbsp;Hz)</td><td class="m c">9</td></tr>
+<tr><td>ICG</td><td class="m c">15</td><td>0&nbsp;(&times;1)</td><td>0&nbsp;(1000&nbsp;Hz), 1&nbsp;(800&nbsp;Hz), 2&nbsp;(500&nbsp;Hz), 3&nbsp;(400&nbsp;Hz), 4&nbsp;(250&nbsp;Hz), 5&nbsp;(200&nbsp;Hz), 6&nbsp;(100&nbsp;Hz)</td><td class="m c">11</td></tr>
+<tr><td>Heart rate</td><td class="m c">16</td><td>0&nbsp;(&times;1)</td><td>10&nbsp;(5&nbsp;Hz)</td><td class="m c">14</td></tr>
+<tr><td>Respiration rate</td><td class="m c">17</td><td>0&nbsp;(&times;1)</td><td>10&nbsp;(5&nbsp;Hz)</td><td class="m c">15</td></tr>
+<tr><td>Heart rate variability</td><td class="m c">18</td><td>0&nbsp;(&times;1)</td><td>10&nbsp;(5&nbsp;Hz)</td><td class="m c">16</td></tr>
+<tr><td>Barometer</td><td class="m c">19</td><td>0&nbsp;(&times;1), 1&nbsp;(&times;2)</td><td>10&nbsp;(5&nbsp;Hz)</td><td class="m c">17</td></tr>
+<tr><td>SpO2</td><td class="m c">20</td><td>0&nbsp;(&times;1)</td><td>10&nbsp;(5&nbsp;Hz)</td><td class="m c">18</td></tr>
+<tr><td>Microphone</td><td class="m c">21</td><td>0&nbsp;(&times;1)</td><td>0&nbsp;(1000&nbsp;Hz)</td><td class="m c">19</td></tr>
+</tbody></table></div>
+
+<div class="tw"><table>
+<caption>Table 38. Experimental data type IDs and their definitions</caption>
+<thead><tr><th class="c">Data type ID</th><th>Units</th><th class="c">Total size (bytes)</th><th class="c">Elements</th><th class="c">Signed</th><th>Analog min</th><th>Analog max</th><th>Digital min</th><th>Digital max</th></tr></thead>
+<tbody>
+<tr><td class="m c">9</td><td>degC</td><td class="m c">2</td><td class="m c">1</td><td class="c">Yes</td><td class="m">-256</td><td class="m">256</td><td class="m">-32768</td><td class="m">32767</td></tr>
+<tr><td class="m c">10</td><td>ADC counts</td><td class="m c">6</td><td class="m c">2</td><td class="c">No</td><td class="m">0</td><td class="m">16777215</td><td class="m">0</td><td class="m">16777215</td></tr>
+<tr><td class="m c">11</td><td>ADC counts</td><td class="m c">3</td><td class="m c">1</td><td class="c">Yes</td><td class="m">-524288</td><td class="m">524287</td><td class="m">-524288</td><td class="m">524287</td></tr>
+<tr><td class="m c">14</td><td>bpm</td><td class="m c">2</td><td class="m c">1</td><td class="c">No</td><td class="m">0</td><td class="m">300</td><td class="m">0</td><td class="m">30000</td></tr>
+<tr><td class="m c">15</td><td>brpm</td><td class="m c">2</td><td class="m c">1</td><td class="c">No</td><td class="m">0</td><td class="m">300</td><td class="m">0</td><td class="m">30000</td></tr>
+<tr><td class="m c">16</td><td>ms</td><td class="m c">2</td><td class="m c">1</td><td class="c">No</td><td class="m">0</td><td class="m">6553.5</td><td class="m">0</td><td class="m">65535</td></tr>
+<tr><td class="m c">17</td><td>hPa</td><td class="m c">3</td><td class="m c">1</td><td class="c">Yes</td><td class="m">-4096</td><td class="m">4096</td><td class="m">-8388608</td><td class="m">8388607</td></tr>
+<tr><td class="m c">18</td><td>%</td><td class="m c">2</td><td class="m c">1</td><td class="c">No</td><td class="m">0</td><td class="m">100</td><td class="m">0</td><td class="m">10000</td></tr>
+<tr><td class="m c">19</td><td>unitless</td><td class="m c">2</td><td class="m c">1</td><td class="c">No</td><td class="m">0</td><td class="m">1</td><td class="m">0</td><td class="m">65535</td></tr>
+</tbody></table></div>
+
+<p>Several of these signals are offered as expansion sensors on the platform. See
+<a href="https://pcardiowearables.com/wearable-biosignal-sensors/">sensors and signals</a> and
+<a href="https://pcardiowearables.com/derived-cardiac-parameters/">derived cardiac parameters</a> for how they are used.</p>
+</section>
+
+</main>
+</div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h2>Platform</h2>
+        <ul>
+          <li><a href="https://pcardiowearables.com/">PCARDIO platform overview</a></li>
+          <li><a href="https://pcardiowearables.com/products-ecg-recorders/">ECG recorders</a></li>
+          <li><a href="https://pcardiowearables.com/wearable-biosignal-sensors/">Sensors and signals</a></li>
+          <li><a href="https://pcardiowearables.com/real-time-biosignal-streaming/">Streaming and data access</a></li>
+          <li><a href="https://pcardiowearables.com/derived-cardiac-parameters/">Derived cardiac parameters</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Developers</h2>
+        <ul>
+          <li><a href="https://pcardiowearables.com/support/developers-api/">Developers API</a></li>
+          <li><a href="https://pcardiowearables.com/support/integration-guide/">Integration guide</a></li>
+          <li><a href="https://pcardiowearables.com/support/quick-start/">Quick start</a></li>
+          <li><a href="https://github.com/2M-Engineering/PCARDIO-Examples">PCARDIO-Examples on GitHub</a></li>
+          <li><a href="https://github.com/2M-Engineering/PCARDIO-Examples/blob/main/PCARDIO-Interface-v8.pdf">Interface document (PDF)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Recorders</h2>
+        <ul>
+          <li><a href="https://pcardiowearables.com/product/1-lead-wearable-ecg-recorder/">HP201, 1-lead ECG</a></li>
+          <li><a href="https://pcardiowearables.com/product/6-lead-wearable-ecg-monitor-activity/">HP202, 6-lead ECG</a></li>
+          <li><a href="https://pcardiowearables.com/product/hp212-wireless-emg-system/">HP212, wireless EMG</a></li>
+          <li><a href="https://pcardiowearables.com/product/hp215-motion-pro-motion-logger/">HP215, Motion Pro</a></li>
+          <li><a href="https://pcardiowearables.com/product/hp262-wireless-ble-dongle/">HP262, wireless BLE dongle</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Support</h2>
+        <ul>
+          <li><a href="https://pcardiowearables.com/support/">Support</a></li>
+          <li><a href="https://pcardiowearables.com/support/documentation/">Documentation</a></li>
+          <li><a href="https://pcardiowearables.com/support/downloads/">Downloads</a></li>
+          <li><a href="https://pcardiowearables.com/support/faq/">FAQ</a></li>
+          <li><a href="https://pcardiowearables.com/about/">About 2M Engineering</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <p>PCARDIO is developed and manufactured by 2M Engineering, John F Kennedylaan 3, 5555&nbsp;XC
+      Valkenswaard, the Netherlands. This document is the API reference for the PCARDIO recorder platform,
+      version 8, dated 23 October 2026, and applies to firmware v1.1.2 and higher.</p>
+      <p>HP201, HP202, HP212 and HP215 are CE marked and tested to IEC&nbsp;60601-1 and
+      EN&nbsp;60601-1-2; they are not medical devices. IP67 applies to the recorder with the recorder
+      holder. HP208 is a prototype and is not CE marked.</p>
+      <p>Documentation and code examples are released under the MIT licence.</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: If you use the PCARDIO platform in your research, please cite it as below.
+title: PCARDIO - wearable biosignal recorder platform
+abstract: Documentation, APIs and code examples for integrating the PCARDIO wearable biosignal recorder platform, covering the wireless BLE and serial interfaces, the memory map, the sampling configuration and the data packet formats, with Python examples. Platform documentation, specifications and support are available at https://pcardiowearables.com
+type: software
+authors:
+  - name: 2M Engineering
+    city: Valkenswaard
+    country: NL
+    website: https://www.2mel.nl
+url: https://pcardiowearables.com
+repository-code: https://github.com/2M-Engineering/PCARDIO-Examples
+license: MIT
+keywords:
+  - ECG
+  - electrocardiography
+  - EMG
+  - electromyography
+  - bioimpedance
+  - impedance cardiography
+  - respiration
+  - biosignals
+  - wearable sensors
+  - physiological monitoring
+  - BLE
